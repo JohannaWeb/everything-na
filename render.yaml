@@ -1,0 +1,23 @@
+# Render.com configuration file
+# This tells Render how to deploy the app
+
+services:
+  # Backend Web Service
+  - type: web
+    name: na-app-backend
+    runtime: node
+    region: oregon
+    plan: free
+    rootDir: backend
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: JWT_SECRET
+        generateValue: true
+      - key: OPENVIDU_URL
+        value: https://localhost:4443
+      - key: OPENVIDU_SECRET
+        value: MY_SECRET
+    healthCheckPath: /api/meeting-rooms
