@@ -21,3 +21,23 @@ services:
       - key: OPENVIDU_SECRET
         value: MY_SECRET
     healthCheckPath: /api/meeting-rooms
+
+  # Frontend Static Site
+  - type: static
+    name: na-app-frontend
+    runtime: node
+    region: oregon
+    plan: free
+    buildCommand: npm install && npm run build
+    publishPath: ./dist
+    envVars:
+      - key: VITE_BACKEND_URL
+        fromService:
+          type: web
+          name: na-app-backend
+          property: host
+      - key: VITE_BACKEND_WS_URL
+        fromService:
+          type: web
+          name: na-app-backend
+          property: host
