@@ -1,5 +1,6 @@
 # Render.com configuration file
-# This tells Render how to deploy the app
+# This tells Render how to deploy the backend only
+# Frontend will be deployed on Vercel
 
 services:
   # Backend Web Service
@@ -8,7 +9,8 @@ services:
     runtime: node
     region: oregon
     plan: free
-    rootDir: backend
+    # Backend is in the 'backend' subdirectory
+    rootDir: ./backend
     buildCommand: npm install
     startCommand: npm start
     envVars:
@@ -20,24 +22,7 @@ services:
         value: https://localhost:4443
       - key: OPENVIDU_SECRET
         value: MY_SECRET
+      - key: PORT
+        value: 10000
+    # Health check endpoint
     healthCheckPath: /api/meeting-rooms
-
-  # Frontend Static Site
-  - type: static
-    name: na-app-frontend
-    runtime: node
-    region: oregon
-    plan: free
-    buildCommand: npm install && npm run build
-    publishPath: ./dist
-    envVars:
-      - key: VITE_BACKEND_URL
-        fromService:
-          type: web
-          name: na-app-backend
-          property: host
-      - key: VITE_BACKEND_WS_URL
-        fromService:
-          type: web
-          name: na-app-backend
-          property: host
