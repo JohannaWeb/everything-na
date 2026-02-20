@@ -1,0 +1,11 @@
+version: '3.3'
+
+services:
+  openvidu:
+    image: openvidu/openvidu-dev:latest
+    ports:
+      - "4443:4443"
+    environment:
+      - OPENVIDU_SECRET=MY_SECRET
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock

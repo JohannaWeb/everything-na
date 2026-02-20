@@ -13,6 +13,18 @@ import {
     createWebSocketConnection,
 } from '../services/api';
 
+const OpenViduVideoComponent = ({ streamManager }) => {
+    const videoRef = useRef();
+
+    useEffect(() => {
+        if (streamManager && videoRef.current) {
+            streamManager.addVideoElement(videoRef.current);
+        }
+    }, [streamManager]);
+
+    return <video autoPlay={true} ref={videoRef} className="video-element" />;
+};
+
 const MeetingRoomScreen = () => {
     const { roomId } = useParams();
     const { user } = useAuth();
@@ -30,9 +42,15 @@ const MeetingRoomScreen = () => {
     const [audioEnabled, setAudioEnabled] = useState(true);
     const [inVideoCall, setInVideoCall] = useState(false);
 
-    // WebSocket state
+    // WebSocket and Session refs
     const wsRef = useRef(null);
     const messagesEndRef = useRef(null);
+    const sessionRef = useRef(null); // Keep track of latest session
+
+    // Keep the ref updated with state so cleanup closures can access it
+    useEffect(() => {
+        sessionRef.current = session;
+    }, [session]);
 
     useEffect(() => {
         // Load initial messages and queue
@@ -46,8 +64,8 @@ const MeetingRoomScreen = () => {
             if (wsRef.current) {
                 wsRef.current.close();
             }
-            if (session) {
-                session.disconnect();
+            if (sessionRef.current) {
+                sessionRef.current.disconnect();
             }
         };
     }, [roomId]);
@@ -244,11 +262,7 @@ const MeetingRoomScreen = () => {
                                 {/* Local video */}
                                 {publisher && (
                                     <div className="video-container">
-                                        <div ref={(node) => {
-                                            if (node && publisher) {
-                                                publisher.addVideoElement(node);
-                                            }
-                                        }} className="video-element" />
+                                        <OpenViduVideoComponent streamManager={publisher} />
                                         <div className="video-label">You</div>
                                     </div>
                                 )}
@@ -256,11 +270,7 @@ const MeetingRoomScreen = () => {
                                 {/* Remote videos */}
                                 {subscribers.map((sub, index) => (
                                     <div key={index} className="video-container">
-                                        <div ref={(node) => {
-                                            if (node && sub) {
-                                                sub.addVideoElement(node);
-                                            }
-                                        }} className="video-element" />
+                                        <OpenViduVideoComponent streamManager={sub} />
                                         <div className="video-label">Participant {index + 1}</div>
                                     </div>
                                 ))}

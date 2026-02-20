@@ -26,6 +26,7 @@ api.interceptors.request.use(
 // Meeting Rooms API
 export const getMeetingRooms = async () => {
     const response = await api.get('/meeting-rooms');
+    console.log('data', response.data);
     return response.data;
 };
 

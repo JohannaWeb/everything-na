@@ -27,7 +27,7 @@ const JustForTodayScreen = () => {
     if (loading) {
         return (
             <div className="just-for-today-container">
-                <div className="loading">Loading today's reflection...</div>
+                <div className="loading">Loading today's reflection... Goodbye</div>
             </div>
         );
     }
