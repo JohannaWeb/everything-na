@@ -1,6 +1,25 @@
+# OS / editor
+.DS_Store
+Thumbs.db
+*.tmp
+*.log
+
+# Node / package managers
 node_modules/
-dist/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Python
+__pycache__/
+*.pyc
+
+# OpenClaw local/runtime scratch (keep state file if needed)
+.openclaw/*.tmp
+.openclaw/*.log
+
+# Optional local secrets
 .env
-.vscode/
-*.db
-.idea/
+.env.*
+!.env.example
